@@ -16,6 +16,24 @@ We can use storage classes in various ways, but we will focus on moving objects 
 
 This python code provisioned on AWS Lambda is used when we want to change the storage class of the objects inserted in Amazon S3 through events, that is, when the file is inserted into the S3 bucket.
 
+## Why should you use this code?
+
+The provided code is a Lambda function designed to move objects between different Amazon S3 storage classes. While S3 lifecycle rules can also transition objects between storage classes, there are several reasons why you might want to use this Lambda function instead:
+
+1. **Event-driven Automation:** This Lambda function is triggered by an S3 event notification, allowing you to automatically move objects to a different storage class as soon as they are uploaded or modified. This provides more immediate and responsive storage class management compared to relying on lifecycle rules, which operate on a scheduled basis.
+
+2. **Granular Control:** Instead of applying lifecycle rules at the bucket or prefix level, this Lambda function allows you to move specific objects to a different storage class based on your custom logic or conditions. This granular control can be beneficial in scenarios where you need to handle objects differently based on their metadata, content, or other factors.
+
+3. **Custom Logic and Integration:** The Lambda function can incorporate custom logic or conditions to determine when and how to move objects between storage classes. Additionally, it can integrate with other AWS services or external systems, allowing you to incorporate additional data sources or triggers into your storage class management process.
+
+4. **Operational Simplicity:** Instead of managing lifecycle rules across multiple buckets or prefixes, you can centralize the logic in this Lambda function and apply it consistently across your S3 resources.
+
+5. **Separation of Concerns:** By using a Lambda function, you can separate the storage class management logic from the core application code, promoting better code organization and maintainability.
+
+However, it's important to note that using this Lambda function may incur additional costs compared to relying solely on S3 lifecycle rules, which are generally more cost-effective for simple storage class transitions. The decision to use this Lambda function or S3 lifecycle rules (or a combination of both) depends on your specific requirements, such as the need for granular control, custom logic, event-driven automation, or integration with other services.
+
+If your use case can be adequately addressed by S3 lifecycle rules, and you don't require the additional flexibility and customization provided by this Lambda function, you may opt to use lifecycle rules instead to manage your S3 storage classes in a more cost-effective manner.
+
 ## Usage
 ### AWS Lambda
 
