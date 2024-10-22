@@ -77,9 +77,10 @@ def lambda_handler(event, context):
     try:
         object_key = event['Records'][0]['s3']['object']['key']
 
-        # Check if the object exists
+        # Check if the object exists and get its current storage class
         try:
-            s3.head_object(Bucket=bucket_name, Key=object_key)
+            response = s3.head_object(Bucket=bucket_name, Key=object_key)
+            current_storage_class = response.get('StorageClass', 'STANDARD')
         except ClientError as e:
             if e.response['Error']['Code'] == '404':
                 logger.error(f'Error: The specified key {object_key} does not exist in bucket {bucket_name}.')
@@ -93,6 +94,14 @@ def lambda_handler(event, context):
                     'statusCode': 500,
                     'body': 'Internal Server Error'
                 }
+
+        # If the object is already in the target storage class, skip the copy operation
+        if current_storage_class == target_storage_class:
+            logger.info(f'Object {object_key} is already in {target_storage_class} storage class. Skipping.')
+            return {
+                'statusCode': 200,
+                'body': 'Object already in target storage class.'
+            }
 
         copy_source = {'Bucket': bucket_name, 'Key': object_key}
 
